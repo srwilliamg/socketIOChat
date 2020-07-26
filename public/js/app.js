@@ -50,19 +50,20 @@ socket.on('connect', () => {
     socket.emit('connected');
 });
 
-socket.on('updateUsers', (data) => {
+socket.on('updateUsers', (data, username) => {
     console.log('new user connected');
-    console.log(socket.username);
+    
+    if(username){
+        console.log(username);
+        myUsername = username;
+        document.querySelector('#username').textContent = username;
+    }
     
     let chatContainer = document.querySelector('#usersChat');
-
-    myUsername = socket.username;
     users = data;
-    
-    document.querySelector('#username').textContent = username;
     chatContainer.innerHTML = '';
 
-    users.forEach(user => {
+    Object.keys(users).forEach(user => {
         if(user != myUsername){
             chatContainer.appendChild(newUser(user));
         }

@@ -11,24 +11,25 @@ const publicDirectory = path.join(__dirname, "public");
 
 app.use(express.static(publicDirectory));
 
-let counter = 0;
 let users = {};
 
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
  
 const getRandomName = () => uniqueNamesGenerator({
   dictionaries: [adjectives, animals, colors],
-  length: 3
+  separator: ' ',
+  length: 2,
+  style: 'capital'
 }); 
 
-io.on('connection', (socket) => {
+io.on('connect', (socket) => {
     // Socket -> the one user connected
     // io -> All users connected
 
     socket.on('connected', () => {
-        let username = getRandomName();
-        socket.username = username;
-        users[username] = 'ok';
+        socket.username = getRandomName();
+        users[socket.username] = 'ok';
+        socket.emit('updateUsers',users, socket.username);
         socket.broadcast.emit('updateUsers',users);
     });
 
@@ -38,8 +39,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        io.emit('updateUsers', users);
         delete users[socket.username];
+        io.emit('updateUsers', users);
     });
 });
 
