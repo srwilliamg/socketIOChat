@@ -25,10 +25,9 @@ const getRandomName = () => uniqueNamesGenerator({
 io.on('connect', (socket) => {
     // Socket -> the one user connected
     // io -> All users connected
-
     socket.on('connected', () => {
         socket.username = getRandomName();
-        users[socket.username] = 'ok';
+        users[socket.id] = socket.username;
         socket.emit('updateUsers',users, socket.username);
         socket.broadcast.emit('updateUsers',users);
     });
@@ -39,7 +38,7 @@ io.on('connect', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        delete users[socket.username];
+        delete users[socket.id];
         io.emit('updateUsers', users);
     });
 });

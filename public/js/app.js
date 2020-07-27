@@ -56,14 +56,14 @@ socket.on('updateUsers', (data, username) => {
     if(username){
         console.log(username);
         myUsername = username;
-        document.querySelector('#username').textContent = username;
+        document.querySelector('#username').innerHTML = `Your username is: <strong>${username}</strong>`;
     }
     
     let chatContainer = document.querySelector('#usersChat');
     users = data;
     chatContainer.innerHTML = '';
 
-    Object.keys(users).forEach(user => {
+    Object.values(users).forEach(user => {
         if(user != myUsername){
             chatContainer.appendChild(newUser(user));
         }
