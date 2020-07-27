@@ -6,7 +6,7 @@ const app = express();
 var httpServer = require('http').createServer(app);
 var io = require('socket.io')(httpServer);
 
-const portServer = process.env.PORT_SERVER || 4000;
+const portServer = process.env.PORT || 4000;
 const publicDirectory = path.join(__dirname, "public");
 
 app.use(express.static(publicDirectory));
